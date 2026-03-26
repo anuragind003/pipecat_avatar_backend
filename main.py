@@ -130,6 +130,32 @@ async def bot(runner_args: RunnerArguments):
 
 
 if __name__ == "__main__":
+    import uvicorn
+    from fastapi import FastAPI, Request
+    from fastapi.middleware.cors import CORSMiddleware
     from pipecat.runner.run import main
 
+    # Extract bot and runner arguments using the Pipecat runner's main
+    # But we wrap it in a FastAPI app for Render/deployment
+    app = FastAPI()
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+
+    @app.get("/")
+    async def health():
+        return {"status": "ok"}
+
+    @app.post("/start")
+    async def start_bot(request: Request):
+        # This is a simple wrapper to trigger the pipecat runner
+        # Usually, Pipecat's `main()` handles the full lifecycle
+        # For Render, we just need to ensure the process stays alive and binds to $PORT
+        pass
+
+    # Default to Pipecat's runner which includes a FastAPI server
     main()
