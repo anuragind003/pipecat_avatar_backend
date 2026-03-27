@@ -1,0 +1,6 @@
+pipecat-ai[deepgram,openai,cartesia,silero,simli,webrtc]
+fastapi
+uvicorn
+aiohttp
+python-dotenv
+loguru
